@@ -52,21 +52,30 @@ public class OrderReceipt {
             tot += lineItem.totalAmount() + salesTax;
         }
 
+        printTaxAndTotal(output, week, totSalesTx, tot);
+
+        return output.toString();
+    }
+
+    private void printTaxAndTotal(StringBuilder output, Integer week, double totSalesTx, double tot) {
         output.append("------------------------------------\n");
 
         // prints the state tax
         output.append("税额: ").append(totSalesTx).append('\n');
 
+        tot = getDiscountInfo(output, week, tot);
+
+        // print total amount
+        output.append("总价: ").append(tot);
+    }
+
+    private double getDiscountInfo(StringBuilder output, Integer week, double tot) {
         if(week==3){
             double account=tot*.02;
             tot=tot*.98;
             output.append("折扣: ").append(account).append('\n');
         }
-
-        // print total amount
-        output.append("总价: ").append(tot);
-
-        return output.toString();
+        return tot;
     }
 
     private void getCustomerInfo(StringBuilder output) {
