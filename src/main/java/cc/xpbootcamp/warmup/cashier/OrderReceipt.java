@@ -24,13 +24,7 @@ public class OrderReceipt {
         StringBuilder output = new StringBuilder();
 
         // print headers
-        output.append("=====老王超市，值得信赖=====\n\n");
-
-        LocalDate dateTime=order.getDate();
-
-        Integer week = dateTime.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
-
-        output.append(dateTime+" "+"星期"+week+"\n\n");
+        Integer week = getHeaderAndWeekInfo(output);
 
         getCustomerInfo(output);
 
@@ -55,6 +49,17 @@ public class OrderReceipt {
         printTaxAndTotal(output, week, totSalesTx, tot);
 
         return output.toString();
+    }
+
+    private Integer getHeaderAndWeekInfo(StringBuilder output) {
+        output.append("=====老王超市，值得信赖=====\n\n");
+
+        LocalDate dateTime=order.getDate();
+
+        Integer week = dateTime.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
+
+        output.append(dateTime+" "+"星期"+week+"\n\n");
+        return week;
     }
 
     private void printTaxAndTotal(StringBuilder output, Integer week, double totSalesTx, double tot) {
