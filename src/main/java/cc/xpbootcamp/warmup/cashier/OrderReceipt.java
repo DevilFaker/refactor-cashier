@@ -20,6 +20,7 @@ public class OrderReceipt {
     }
 
     public String printReceipt() {
+
         StringBuilder output = new StringBuilder();
 
         // print headers
@@ -31,12 +32,7 @@ public class OrderReceipt {
 
         output.append(dateTime+" "+"星期"+week+"\n\n");
 
-        if(order.getCustomerAddress()!=null){
-            output.append(order.getCustomerAddress());
-        }
-        if(order.getCustomerName()!=null){
-            output.append(order.getCustomerName());
-        }
+        getCustomerInfo(output);
 
         // prints lineItems
         double totSalesTx = 0d;
@@ -71,5 +67,14 @@ public class OrderReceipt {
         output.append("总价: ").append(tot);
 
         return output.toString();
+    }
+
+    private void getCustomerInfo(StringBuilder output) {
+        if(order.getCustomerAddress()!=null){
+            output.append(order.getCustomerAddress());
+        }
+        if(order.getCustomerName()!=null){
+            output.append(order.getCustomerName());
+        }
     }
 }
