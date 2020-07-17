@@ -23,12 +23,10 @@ public class OrderReceipt {
 
         StringBuilder output = new StringBuilder();
 
-        // print headers
         Integer week = getHeaderAndWeekInfo(output);
 
         getCustomerInfo(output);
 
-        // prints lineItems
         double totSalesTx = 0d;
         double tot = 0d;
         for (LineItem lineItem : order.getLineItems()) {
@@ -38,11 +36,9 @@ public class OrderReceipt {
             output.append('\t');
             output.append('\n');
 
-            // calculate sales tax @ rate of 10%
             double salesTax = lineItem.totalAmount() * .10;
             totSalesTx += salesTax;
 
-            // calculate total amount of lineItem = price * quantity + 10 % sales tax
             tot += lineItem.totalAmount() + salesTax;
         }
 
@@ -65,12 +61,10 @@ public class OrderReceipt {
     private void printTaxAndTotal(StringBuilder output, Integer week, double totSalesTx, double tot) {
         output.append("------------------------------------\n");
 
-        // prints the state tax
         output.append("税额: ").append(totSalesTx).append('\n');
 
         tot = getDiscountInfo(output, week, tot);
 
-        // print total amount
         output.append("总价: ").append(tot);
     }
 
