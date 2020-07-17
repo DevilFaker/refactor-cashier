@@ -21,68 +21,68 @@ public class OrderReceipt {
 
     public String printReceipt() {
 
-        StringBuilder output = new StringBuilder();
+        StringBuilder receipt = new StringBuilder();
 
-        Integer week = getHeaderAndWeekInfo(output);
+        int weekInfo = getHeaderAndWeekInfo(receipt);
 
-        getCustomerInfo(output);
+        getCustomerInfo(receipt);
 
-        double totSalesTx = 0d;
-        double tot = 0d;
+        double totalTax = 0d;
+        double totalPrice = 0d;
+        
         for (LineItem lineItem : order.getLineItems()) {
-            output.append(lineItem.getDescription()+", ");
-            output.append(lineItem.getPrice()+" x ");
-            output.append(lineItem.getQuantity());
-            output.append('\t');
-            output.append('\n');
-
-            double salesTax = lineItem.totalAmount() * .10;
-            totSalesTx += salesTax;
-
-            tot += lineItem.totalAmount() + salesTax;
+            receipt.append(lineItem.getDescription()+", ");
+            receipt.append(lineItem.getPrice()+" x ");
+            receipt.append(lineItem.getQuantity());
+            receipt.append('\t');
+            receipt.append('\n');
+            double tax = lineItem.totalAmount() * .10;
+            totalTax += tax;
+            totalPrice += lineItem.totalAmount() + tax;
         }
 
-        printTaxAndTotal(output, week, totSalesTx, tot);
+        printTaxAndTotal(receipt, weekInfo, totalTax, totalPrice);
 
-        return output.toString();
+        return receipt.toString();
     }
 
-    private Integer getHeaderAndWeekInfo(StringBuilder output) {
-        output.append("=====老王超市，值得信赖=====\n\n");
+    private int getHeaderAndWeekInfo(StringBuilder receipt) {
+        receipt.append("=====老王超市，值得信赖=====\n\n");
 
         LocalDate dateTime=order.getDate();
 
-        Integer week = dateTime.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
+        int week = dateTime.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
 
-        output.append(dateTime+" "+"星期"+week+"\n\n");
+        receipt.append(dateTime+" "+"星期"+week+"\n\n");
+
         return week;
     }
 
-    private void printTaxAndTotal(StringBuilder output, Integer week, double totSalesTx, double tot) {
-        output.append("------------------------------------\n");
+    private void printTaxAndTotal(StringBuilder receipt, Integer week, double totSalesTx, double totalPrice) {
+        receipt.append("------------------------------------\n");
 
-        output.append("税额: ").append(totSalesTx).append('\n');
+        receipt.append("税额: ").append(totSalesTx).append('\n');
 
-        tot = getDiscountInfo(output, week, tot);
+        totalPrice = getDiscountInfo(receipt, week, totalPrice);
 
-        output.append("总价: ").append(tot);
+        receipt.append("总价: ").append(totalPrice);
     }
 
-    private double getDiscountInfo(StringBuilder output, Integer week, double tot) {
+    private double getDiscountInfo(StringBuilder receipt, Integer week, double totalPrice) {
         if(week==3){
-            double account=tot*.02;
-            tot=tot*.98;
-            output.append("折扣: ").append(account).append('\n');
+            double account=totalPrice*.02;
+            totalPrice=totalPrice*.98;
+            receipt.append("折扣: ").append(account).append('\n');
         }
-        return tot;
+        return totalPrice;
     }
 
-    private void getCustomerInfo(StringBuilder output) {
+    private void getCustomerInfo(StringBuilder receipt) {
         if(order.getCustomerAddress()!=null){
-            output.append(order.getCustomerAddress());
+            receipt.append(order.getCustomerAddress());
         }
         if(order.getCustomerName()!=null){
-            output.append(order.getCustomerName());
+            receipt.append(order.getCustomerName());
         }
     }
 }
