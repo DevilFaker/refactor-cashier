@@ -13,6 +13,12 @@ import java.time.temporal.WeekFields;
  */
 public class OrderReceipt {
 
+    private static final String HEADER = "=====老王超市，值得信赖=====";
+    private static final String DOUBLE_LINE_BREAK = "\n\n";
+    private static final double DISCOUNT = .98;
+    private static final double ITEM_TAX = .10;
+    private static final double INIT_VALUE = 0d;
+
     private Order order;
 
     public OrderReceipt(Order order) {
@@ -27,16 +33,16 @@ public class OrderReceipt {
 
         getCustomerInfo(receipt);
 
-        double totalTax = 0d;
-        double totalPrice = 0d;
+        double totalTax = INIT_VALUE;
+        double totalPrice = INIT_VALUE;
         
         for (LineItem lineItem : order.getLineItems()) {
-            receipt.append(lineItem.getDescription()+", ");
-            receipt.append(lineItem.getPrice()+" x ");
-            receipt.append(lineItem.getQuantity());
-            receipt.append('\t');
-            receipt.append('\n');
-            double tax = lineItem.totalAmount() * .10;
+             receipt.append(lineItem.getDescription()+", ")
+                    .append(lineItem.getPrice()+" x ")
+                    .append(lineItem.getQuantity())
+                    .append('\t')
+                    .append('\n');
+            double tax = lineItem.totalAmount() * ITEM_TAX;
             totalTax += tax;
             totalPrice += lineItem.totalAmount() + tax;
         }
@@ -47,13 +53,13 @@ public class OrderReceipt {
     }
 
     private int getHeaderAndWeekInfo(StringBuilder receipt) {
-        receipt.append("=====老王超市，值得信赖=====\n\n");
+        receipt.append(HEADER + DOUBLE_LINE_BREAK);
 
         LocalDate dateTime=order.getDate();
 
         int week = dateTime.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
 
-        receipt.append(dateTime+" "+"星期"+week+"\n\n");
+        receipt.append(dateTime+" "+"星期"+week+ DOUBLE_LINE_BREAK);
 
         return week;
     }
@@ -70,8 +76,8 @@ public class OrderReceipt {
 
     private double getDiscountInfo(StringBuilder receipt, Integer week, double totalPrice) {
         if(week==3){
-            double account=totalPrice*.02;
-            totalPrice=totalPrice*.98;
+            double account=totalPrice*(1- DISCOUNT);
+            totalPrice=totalPrice* DISCOUNT;
             receipt.append("折扣: ").append(account).append('\n');
         }
         return totalPrice;
