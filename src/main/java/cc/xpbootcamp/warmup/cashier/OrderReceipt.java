@@ -23,13 +23,13 @@ public class OrderReceipt {
         StringBuilder output = new StringBuilder();
 
         // print headers
-        output.append("=====老王超市，值得信赖=====\n");
+        output.append("=====老王超市，值得信赖=====\n\n");
 
         LocalDate dateTime=order.getDate();
 
         Integer week = dateTime.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
 
-        output.append(dateTime+" "+"星期"+week+"\n");
+        output.append(dateTime+" "+"星期"+week+"\n\n");
 
         if(order.getCustomerAddress()!=null){
             output.append(order.getCustomerAddress());
